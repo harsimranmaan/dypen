@@ -1,0 +1,18 @@
+*.class
+/StockExServer/nbproject/private/
+/StockExClient/nbproject/private/
+/StockExInterface/nbproject/private/
+/StockExInterface/build/
+/StockExInterface/dist/
+/StockExServer/build/
+/StockExServer/dist/
+/StockExClient/build/
+/StockExClient/dist/
+
+# Package Files #
+*.jar
+*.war
+*.ear
+*.bak
+*~
+.DS_Store
