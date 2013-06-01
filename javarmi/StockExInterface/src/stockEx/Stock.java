@@ -16,6 +16,7 @@ public class Stock implements Serializable
     private static final long serialVersionUID = 111L;
     private String name;
     private double price;
+    private int quantity;
 
     /**
      *
@@ -74,5 +75,26 @@ public class Stock implements Serializable
     public String toString()
     {
         return "Stock [name:" + name + ", price:" + price + "]";
+    }
+
+    public String print()
+    {
+        return "Stock [name:" + name + ", price:" + price + ", quantity:" + quantity + " ]";
+    }
+
+    /**
+     * @return the quantity
+     */
+    public int getQuantity()
+    {
+        return quantity;
+    }
+
+    /**
+     * @param quantity the quantity to set
+     */
+    public void setQuantity(int quantity)
+    {
+        this.quantity = quantity;
     }
 }

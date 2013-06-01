@@ -5,10 +5,12 @@
 package stockexclient;
 
 import java.rmi.RemoteException;
+import java.util.List;
 import java.util.Scanner;
 import stockEx.Client;
 import stockEx.IAuthentication;
 import stockEx.IStockQuery;
+import stockEx.Stock;
 
 /**
  *
@@ -85,29 +87,46 @@ public class InteractionManager
             switch (commandString[0])
             {
                 case "query":
-                    if (commandString.length == 2)
+                    if (isLoggedIn())
                     {
-                        if (isLoggedIn())
+                        if (commandString.length == 2)
                         {
+
                             System.out.println(stockQuery.query(client, commandString[1]));
 
                         }
                         else
                         {
-                            printloginMessage();
+                            printWarning(commandString[0]);
                         }
                     }
                     else
                     {
-                        printWarning(commandString[0]);
+                        printloginMessage();
                     }
                     break;
+
                 case "list":
-                    if (commandString.length == 1 && !client.isAdmin())
+                    if (isLoggedIn())
                     {
-                        if (isLoggedIn())
+                        if (commandString.length == 1 && !client.isAdmin())
                         {
-                            System.out.println("Under construction");
+
+                            List<Stock> list = stockQuery.list(client);
+                            if (list.size() > 0)
+                            {
+                                for (Stock stock : list)
+                                {
+                                    System.out.println(stock.print());
+                                }
+                            }
+                            else
+                            {
+                            }
+                        }
+                        else
+                        {
+                            printWarning(commandString[0]);
                         }
                     }
                     else
@@ -118,36 +137,42 @@ public class InteractionManager
                     break;
 
                 case "buy":
-                    if (commandString.length == 3 && !client.isAdmin())
+                    if (isLoggedIn())
                     {
-                        if (isLoggedIn())
+                        if (commandString.length == 3 && !client.isAdmin())
                         {
+
                             try
                             {
                                 quantity = getInteger(commandString[2]);
-                                stockQuery.buy(client, commandString[1], quantity);
+                                client = stockQuery.buy(client, commandString[1], quantity);
                                 System.out.println(Integer.toString(quantity) + " " + commandString[1] + " bought.");
+                                System.out.println(" Your current balance is $" + client.getBalance() + " .");
                             }
                             catch (NumberFormatException ne)
                             {
                                 printWarning(commandString[0]);
                             }
+
                         }
                         else
                         {
-                            printloginMessage();
+                            printWarning(commandString[0]);
                         }
                     }
                     else
                     {
-                        printWarning(commandString[0]);
+                        printloginMessage();
                     }
+
                     break;
+
                 case "sell":
-                    if (commandString.length == 3 && !client.isAdmin())
+                    if (isLoggedIn())
                     {
-                        if (isLoggedIn())
+                        if (commandString.length == 3 && !client.isAdmin())
                         {
+
                             try
                             {
                                 quantity = getInteger(commandString[2]);
@@ -161,20 +186,22 @@ public class InteractionManager
                         }
                         else
                         {
-                            printloginMessage();
+                            printWarning(commandString[0]);
                         }
                     }
                     else
                     {
-                        printWarning(commandString[0]);
+                        printloginMessage();
                     }
+
                     break;
 
                 case "update":
-                    if (commandString.length == 3 && client.isAdmin())
+                    if (isLoggedIn())
                     {
-                        if (isLoggedIn())
+                        if (commandString.length == 3 && client.isAdmin())
                         {
+
                             try
                             {
                                 double price = getInputAmount(commandString[2]);
@@ -188,13 +215,14 @@ public class InteractionManager
                         }
                         else
                         {
-                            printloginMessage();
+                            printWarning(commandString[0]);
                         }
                     }
                     else
                     {
-                        printWarning(commandString[0]);
+                        printloginMessage();
                     }
+
                     break;
                 case "user":
                     if (commandString.length == 2)
@@ -220,6 +248,8 @@ public class InteractionManager
 
                     break;
             }
+
+
         }
         while (!isExit);
     }

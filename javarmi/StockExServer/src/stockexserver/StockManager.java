@@ -11,6 +11,8 @@ import java.net.URL;
 import java.rmi.RemoteException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import stockEx.ConfigManager;
@@ -135,5 +137,31 @@ public class StockManager extends Thread
                         .getName()).log(Level.SEVERE, null, ex);
             }
         }
+    }
+
+    public static List<Stock> listOfStocks(String clientName)
+    {
+        ResultSet set;
+        List<Stock> list = new ArrayList<Stock>();
+        try
+        {
+            set = DataAccess.getResultSet("SELECT * FROM ClientBuy WHERE clientName='" + clientName + "'");
+            if (set != null && set.next())
+            {
+                do
+                {
+                    Stock s = new Stock(set.getString("stockName"));
+                    s.setPrice(set.getDouble("price"));
+                    s.setQuantity(set.getInt("quantity"));
+                    list.add(s);
+                }
+                while (set.next());
+            }
+        }
+        catch (SQLException ex)
+        {
+            Logger.getLogger(StockManager.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return list;
     }
 }

@@ -53,6 +53,6 @@ public class StockQuery extends UnicastRemoteObject implements IStockQuery, Seri
     @Override
     public List<Stock> list(Client client)
     {
-        throw new UnsupportedOperationException("Not supported yet");
+        return StockManager.listOfStocks(client.getUsername());
     }
 }
