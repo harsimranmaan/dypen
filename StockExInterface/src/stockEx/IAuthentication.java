@@ -14,7 +14,5 @@ import java.rmi.RemoteException;
 public interface IAuthentication extends Remote
 {
 
-    boolean authenticate(String username) throws RemoteException;
-
-    String init(String username) throws RemoteException;
+    Client init(String username, boolean isAdmin) throws RemoteException;
 }

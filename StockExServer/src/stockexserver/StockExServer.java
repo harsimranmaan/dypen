@@ -10,6 +10,7 @@ import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import stockEx.IAuthentication;
 import stockEx.IStockQuery;
 
 /**
@@ -30,6 +31,7 @@ public class StockExServer
         // Bind the remote object in the registry
         Registry registry = LocateRegistry.createRegistry(1099);
         registry.rebind(IStockQuery.class.getSimpleName(), new StockQuery());
+        registry.rebind(IAuthentication.class.getSimpleName(), new Authentication());
         System.out.println("Registered object ");
 
         System.out.println("Server started");

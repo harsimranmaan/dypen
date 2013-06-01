@@ -7,6 +7,7 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import stockEx.IAuthentication;
 import stockEx.IStockQuery;
 
 /**
@@ -25,8 +26,10 @@ public class StockExClient
         {
             Registry registry = LocateRegistry.getRegistry("localhost", 1099);
             IStockQuery stockQuery = (IStockQuery) registry.lookup(IStockQuery.class.getSimpleName());
+            IAuthentication auth = (IAuthentication) registry.lookup(IAuthentication.class.getSimpleName());
             for (int i = 1; i <= 100; i++)
             {
+                System.out.println(auth.init("maan", true));
                 System.out.println(stockQuery.query("" + i, "GOOG"));
                 Thread.sleep(100);
             }
