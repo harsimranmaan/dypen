@@ -4,12 +4,10 @@
  */
 package stockexserver;
 
+import stockEx.ConfigManager;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
-import java.rmi.server.UnicastRemoteObject;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import stockEx.IAuthentication;
 import stockEx.IStockQuery;
 
@@ -20,20 +18,26 @@ import stockEx.IStockQuery;
 public class StockExServer
 {
 
+    private static void printMessage(String name)
+    {
+        System.out.println("Registered " + name);
+    }
+
     /**
      * @param args the command line arguments
      */
     public static void main(String[] args) throws RemoteException
     {
 
-//        StockQuery queryObj = new StockQuery();
-//        IStockQuery stockQueryInterface = (IStockQuery) UnicastRemoteObject.exportObject(queryObj, 60011);
         // Bind the remote object in the registry
-        Registry registry = LocateRegistry.createRegistry(1099);
-        registry.rebind(IStockQuery.class.getSimpleName(), new StockQuery());
-        registry.rebind(IAuthentication.class.getSimpleName(), new Authentication());
-        System.out.println("Registered object ");
+        Registry registry = LocateRegistry.createRegistry(Integer.parseInt(ConfigManager.getInstance().getPropertyValue("port")));
 
+        registry.rebind(IStockQuery.class.getSimpleName(), new StockQuery());
+        printMessage(IStockQuery.class.getSimpleName());
+
+        registry.rebind(IAuthentication.class.getSimpleName(), new Authentication());
+
+        printMessage(IAuthentication.class.getSimpleName());
         System.out.println("Server started");
         while (true);
 

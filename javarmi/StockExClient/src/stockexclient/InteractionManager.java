@@ -21,6 +21,23 @@ public class InteractionManager
     private Scanner scanIn;
     private IStockQuery stockQuery;
     private IAuthentication authentication;
+    private Client client;
+
+    private void printloginMessage()
+    {
+        System.out.println("Please log in before you send the request.");
+    }
+
+    private boolean isLoggedIn()
+    {
+        return client != null;
+    }
+
+    private void printWarning(String commandName)
+    {
+        System.out.print("Invalid parameters or Invalid command " + commandName);
+        System.out.println(". Use help for syntax.");
+    }
 
     public String getSelectedUserName()
     {
@@ -37,79 +54,118 @@ public class InteractionManager
         this.stockQuery = stockQuery;
         this.authentication = authentication;
         System.out.println("------------------------------------------------------");
-        System.out.println("|             Welcome to Maan Banking                |");
+        System.out.println("|             Welcome to dypen Stock Exchange        |");
         System.out.println("------------------------------------------------------");
         System.out.println("");
     }
 
     public void init() throws RemoteException
     {
-        Client client;
+
         String message, command;
-        int quantity;
+        int quantity = 0;
         String[] commandString;
         boolean isExit = false;
 
         do
         {
-            printPrompt();
-
             System.out.println("> ");
             command = getInput();
             commandString = command.split(" ");
             switch (commandString[0])
             {
-                case "user":
+                case "query":
                     if (commandString.length == 2)
                     {
-                        client = authentication.init(commandString[1], false);
+                        if (isLoggedIn())
+                        {
+                            System.out.println(stockQuery.query(client, commandString[1]));
+
+                        }
+                        else
+                        {
+                            printloginMessage();
+                        }
+                    }
+                    else
+                    {
+                        printWarning(commandString[0]);
                     }
                     break;
+
                 case "buy":
                     if (commandString.length == 3)
                     {
-                        try
+                        if (isLoggedIn())
                         {
-                            quantity = Integer.parseInt(commandString[2]);
-                            //                               stockQuery.buy(commandString[0],commandString[1],quantity);
+                            quantity = getInteger(commandString[2]);
+                            stockQuery.buy(client, commandString[1], quantity);
+                            System.out.println(Integer.toString(quantity) + " " + commandString[1] + " bought.");
                         }
-                        catch (NumberFormatException e)
+                        else
                         {
-                            System.out.println(e.getMessage());
+                            printloginMessage();
                         }
+                    }
+                    else
+                    {
+                        printWarning(commandString[0]);
                     }
                     break;
                 case "sell":
                     if (commandString.length == 3)
                     {
-                        try
+                        if (isLoggedIn())
                         {
-                            quantity = Integer.parseInt(commandString[2]);
-                            //                             stockQuery.sell(commandString[0],commandString[1],quantity);
+                            quantity = getInteger(commandString[2]);
+                            stockQuery.sell(client, commandString[1], quantity);
+                            System.out.println(Integer.toString(quantity) + " " + commandString[1] + " sold.");
                         }
-                        catch (NumberFormatException e)
+                        else
                         {
-                            System.out.println(e.getMessage());
+                            printloginMessage();
                         }
                     }
-                    break;
-                case "query":
-                    if (commandString.length == 2)
+                    else
                     {
-                        stockQuery.query(commandString[0], commandString[1]);
+                        printWarning(commandString[0]);
                     }
                     break;
+
                 case "update":
                     if (commandString.length == 3)
                     {
+                        if (isLoggedIn())
+                        {
+                            stockQuery.query(client, commandString[1]);
+                        }
+                        else
+                        {
+                            printloginMessage();
+                        }
+                    }
+                    else
+                    {
+                        printWarning(commandString[0]);
+                    }
+                    break;
+                case "user":
+                    if (commandString.length == 2)
+                    {
+                        client = authentication.init(commandString[1], false);
+                    }
+                    else
+                    {
+                        printWarning(commandString[0]);
                     }
                     break;
                 case "help":
-
                     printPrompt();
                     break;
                 default:
                     System.out.println("Command not recognized.");
+                    printWarning(commandString[0]);
+
                     break;
             }
         }
@@ -149,5 +205,27 @@ public class InteractionManager
             };
             return SplitString;
         }
+    }
+
+    private double getInputAmount(String bal) throws NumberFormatException
+    {
+
+        //check if a  valid decimal
+        if (!bal.matches("^\\d+$|^[.]?\\d{1,2}$|^\\d+[.]?\\d{1,2}$"))
+        {
+            throw new NumberFormatException("Invalid entry");
+        }
+        return Double.valueOf(bal);
+    }
+
+    private int getInteger(String strInt) throws NumberFormatException
+    {
+
+        //check if a  valid decimal
+        if (!strInt.matches("^[0-9]+$"))
+        {
+            throw new NumberFormatException("Invalid entry");
+        }
+        return Integer.valueOf(strInt);
     }
 }
