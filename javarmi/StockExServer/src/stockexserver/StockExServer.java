@@ -41,6 +41,7 @@ public class StockExServer
         printMessage(IAuthentication.class.getSimpleName());
         DataAccess.Connect();
         System.out.println("Server started");
+        new StockManager().start();
         while (true);
 
     }

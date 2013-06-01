@@ -28,7 +28,7 @@ public class StockQuery extends UnicastRemoteObject implements IStockQuery, Seri
     @Override
     public Stock query(Client client, String ticketName) throws RemoteException
     {
-        return new Stock("tic" + ticketName, 10);
+        return StockManager.fetchOrCreate(ticketName);
     }
 
     @Override
