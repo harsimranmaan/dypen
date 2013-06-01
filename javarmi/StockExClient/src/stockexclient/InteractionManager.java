@@ -7,6 +7,8 @@ package stockexclient;
 import java.rmi.RemoteException;
 import java.util.List;
 import java.util.Scanner;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import stockEx.Client;
 import stockEx.IAuthentication;
 import stockEx.IStockQuery;
@@ -19,7 +21,6 @@ import stockEx.Stock;
 public class InteractionManager
 {
 
-    private String selectedUserName;
     private Scanner scanIn;
     private IStockQuery stockQuery;
     private IAuthentication authentication;
@@ -29,6 +30,11 @@ public class InteractionManager
     private void printloginMessage()
     {
         System.out.println("Please log in before you send the request.");
+    }
+
+    private void printMessage(String message)
+    {
+        System.out.println(message);
     }
 
     /**
@@ -91,9 +97,15 @@ public class InteractionManager
                     {
                         if (commandString.length == 2)
                         {
+                            try
+                            {
+                                System.out.println(stockQuery.query(client, commandString[1]));
+                            }
+                            catch (Exception ex)
+                            {
 
-                            System.out.println(stockQuery.query(client, commandString[1]));
-
+                                printMessage(ex.getMessage());
+                            }
                         }
                         else
                         {
@@ -122,7 +134,10 @@ public class InteractionManager
                             }
                             else
                             {
+                                printMessage("No records found.");
                             }
+
+
                         }
                         else
                         {
@@ -152,6 +167,10 @@ public class InteractionManager
                             catch (NumberFormatException ne)
                             {
                                 printWarning(commandString[0]);
+                            }
+                            catch (Exception ex)
+                            {
+                                printMessage(ex.getMessage());
                             }
 
                         }
@@ -183,6 +202,10 @@ public class InteractionManager
                             {
                                 printWarning(commandString[0]);
                             }
+                            catch (Exception ex)
+                            {
+                                printMessage(ex.getMessage());
+                            }
                         }
                         else
                         {
@@ -201,7 +224,6 @@ public class InteractionManager
                     {
                         if (commandString.length == 3 && client.isAdmin())
                         {
-
                             try
                             {
                                 double price = getInputAmount(commandString[2]);
@@ -211,6 +233,10 @@ public class InteractionManager
                             catch (NumberFormatException ne)
                             {
                                 printWarning(commandString[0]);
+                            }
+                            catch (Exception ex)
+                            {
+                                printMessage(ex.getMessage());
                             }
                         }
                         else
@@ -242,6 +268,7 @@ public class InteractionManager
                     break;
                 case "quit":
                     client = null;
+                    isExit = true;
                     break;
                 default:
                     printWarning(commandString[0]);

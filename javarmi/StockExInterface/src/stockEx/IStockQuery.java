@@ -21,7 +21,7 @@ public interface IStockQuery extends Remote
      * @return <p/>
      * @throws RemoteException
      */
-    Stock query(Client client, String ticketName) throws RemoteException;
+    Stock query(Client client, String ticketName) throws RemoteException, Exception;
 
     /**
      *
@@ -29,7 +29,7 @@ public interface IStockQuery extends Remote
      * @param quantity <p/>
      * @throws RemoteException
      */
-    Client buy(Client client, String stock, int quantity) throws RemoteException;
+    Client buy(Client client, String stock, int quantity) throws RemoteException, Exception;
 
     /**
      *
@@ -37,19 +37,18 @@ public interface IStockQuery extends Remote
      * @param quantity <p/>
      * @throws RemoteException
      */
-    Client sell(Client client, String stock, int quantity) throws RemoteException;
+    Client sell(Client client, String stock, int quantity) throws RemoteException, Exception;
 
     /**
      *
      * @param stock <p/>
      * @throws RemoteException
      */
-    void update(Client client, String stock, double price) throws RemoteException;
+    void update(Client client, String stock, double price) throws RemoteException, Exception;
 
     /**
      *
-     * @param client
-     * <p/>
+     * @param client <p/>
      * @return List of stock
      * <p/>
      * @throws RemoteException
