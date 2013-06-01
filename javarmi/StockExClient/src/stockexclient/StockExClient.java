@@ -24,9 +24,15 @@ public class StockExClient
     {
         try
         {
-            Registry registry = LocateRegistry.getRegistry(ConfigManager.getInstance().getPropertyValue("server"), Integer.parseInt(ConfigManager.getInstance().getPropertyValue("port")));
+            ConfigManager context = ConfigManager.getInstance();
+            Registry registry = LocateRegistry.getRegistry(context.getPropertyValue("server"), Integer.parseInt(context.getPropertyValue("port")));
             IStockQuery stockQuery = (IStockQuery) registry.lookup(IStockQuery.class.getSimpleName());
             IAuthentication auth = (IAuthentication) registry.lookup(IAuthentication.class.getSimpleName());
+            String isAdmin = context.getPropertyValue("admin");
+            InteractionManager interact = new InteractionManager(stockQuery, auth, isAdmin.equals("true"));
+            //Start
+            interact.init();
+
             for (int i = 1; i <= 100; i++)
             {
                 System.out.println(auth.init("maan", true));
