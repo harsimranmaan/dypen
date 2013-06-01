@@ -6,6 +6,7 @@ package stockEx;
 
 import java.rmi.Remote;
 import java.rmi.RemoteException;
+import java.util.List;
 
 /**
  *
@@ -44,4 +45,14 @@ public interface IStockQuery extends Remote
      * @throws RemoteException
      */
     void update(Client client, String stock, double price) throws RemoteException;
+
+    /**
+     *
+     * @param client
+     * <p/>
+     * @return List of stock
+     * <p/>
+     * @throws RemoteException
+     */
+    List<Stock> list(Client client) throws RemoteException;
 }
