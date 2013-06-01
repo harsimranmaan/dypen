@@ -22,6 +22,7 @@ public class InteractionManager
     private IStockQuery stockQuery;
     private IAuthentication authentication;
     private Client client;
+    private boolean isAdmin;
 
     private void printloginMessage()
     {
@@ -35,8 +36,8 @@ public class InteractionManager
 
     private void printWarning(String commandName)
     {
-        System.out.print("Invalid parameters or Invalid command " + commandName);
-        System.out.println(". Use help for syntax.");
+        System.out.print("Invalid parameters or Invalid command '" + commandName);
+        System.out.println("'. Use help for syntax.");
     }
 
     public String getSelectedUserName()
@@ -49,10 +50,11 @@ public class InteractionManager
         this.selectedUserName = selectedUserName;
     }
 
-    public InteractionManager(IStockQuery stockQuery, IAuthentication authentication)
+    public InteractionManager(IStockQuery stockQuery, IAuthentication auth, boolean isAdmin)
     {
+        this.isAdmin = isAdmin;
         this.stockQuery = stockQuery;
-        this.authentication = authentication;
+        this.authentication = auth;
         System.out.println("------------------------------------------------------");
         System.out.println("|             Welcome to dypen Stock Exchange        |");
         System.out.println("------------------------------------------------------");
@@ -69,7 +71,7 @@ public class InteractionManager
 
         do
         {
-            System.out.println("> ");
+            System.out.println(isLoggedIn() ? client.getUsername() + " >" : " >");
             command = getInput();
             commandString = command.split(" ");
             switch (commandString[0])
@@ -94,13 +96,20 @@ public class InteractionManager
                     break;
 
                 case "buy":
-                    if (commandString.length == 3)
+                    if (commandString.length == 3 && !client.isAdmin())
                     {
                         if (isLoggedIn())
                         {
-                            quantity = getInteger(commandString[2]);
-                            stockQuery.buy(client, commandString[1], quantity);
-                            System.out.println(Integer.toString(quantity) + " " + commandString[1] + " bought.");
+                            try
+                            {
+                                quantity = getInteger(commandString[2]);
+                                stockQuery.buy(client, commandString[1], quantity);
+                                System.out.println(Integer.toString(quantity) + " " + commandString[1] + " bought.");
+                            }
+                            catch (NumberFormatException ne)
+                            {
+                                printWarning(commandString[0]);
+                            }
                         }
                         else
                         {
@@ -113,13 +122,20 @@ public class InteractionManager
                     }
                     break;
                 case "sell":
-                    if (commandString.length == 3)
+                    if (commandString.length == 3 && !client.isAdmin())
                     {
                         if (isLoggedIn())
                         {
-                            quantity = getInteger(commandString[2]);
-                            stockQuery.sell(client, commandString[1], quantity);
-                            System.out.println(Integer.toString(quantity) + " " + commandString[1] + " sold.");
+                            try
+                            {
+                                quantity = getInteger(commandString[2]);
+                                stockQuery.sell(client, commandString[1], quantity);
+                                System.out.println(Integer.toString(quantity) + " " + commandString[1] + " sold.");
+                            }
+                            catch (NumberFormatException ne)
+                            {
+                                printWarning(commandString[0]);
+                            }
                         }
                         else
                         {
@@ -133,11 +149,20 @@ public class InteractionManager
                     break;
 
                 case "update":
-                    if (commandString.length == 3)
+                    if (commandString.length == 3 && client.isAdmin())
                     {
                         if (isLoggedIn())
                         {
-                            stockQuery.query(client, commandString[1]);
+                            try
+                            {
+                                double price = getInputAmount(commandString[2]);
+                                stockQuery.update(client, commandString[1], price);
+                                System.out.println("Price of " + commandString[1] + " updated to " + price + " .");
+                            }
+                            catch (NumberFormatException ne)
+                            {
+                                printWarning(commandString[0]);
+                            }
                         }
                         else
                         {
@@ -152,7 +177,7 @@ public class InteractionManager
                 case "user":
                     if (commandString.length == 2)
                     {
-                        client = authentication.init(commandString[1], false);
+                        client = authentication.init(commandString[1], isAdmin);
                     }
                     else
                     {
@@ -162,8 +187,10 @@ public class InteractionManager
                 case "help":
                     printPrompt();
                     break;
+                case "quit":
+                    client = null;
+                    break;
                 default:
-                    System.out.println("Command not recognized.");
                     printWarning(commandString[0]);
 
                     break;
@@ -175,12 +202,38 @@ public class InteractionManager
     public void printPrompt()
     {
         System.out.println("-----------------------------------------------");
-        System.out.println("|   Commands: user username                   |");
-        System.out.println("|           : buy  ticker name quantity       |");
-        System.out.println("|           : sell ticker name quantity       |");
-        System.out.println("|           : query ticker name               |");
-        //  System.out.println("|           : update  stockticker            |");
+        System.out.println("|                   COMMANDS                   |");
         System.out.println("-----------------------------------------------");
+        System.out.println("|               user <user name>               |");
+        System.out.println("| Eg.           user johnsmith                 |");
+
+
+        System.out.println("|                                              |");
+        if (isLoggedIn())
+        {
+            System.out.println("|              query <ticker name>             |");
+            System.out.println("| Eg.              query goog                  |");
+            System.out.println("|                                              |");
+            if (!client.isAdmin())
+            {
+                System.out.println("|         buy  <ticker name> <quantity>        |");
+                System.out.println("| Eg.             buy  goog 10                 |");
+                System.out.println("|                                              |");
+                System.out.println("|         sell <ticker name> <quantity>        |");
+                System.out.println("| Eg.             sell  goog 10                |");
+
+            }
+            else
+            {
+                System.out.println("|         update  <ticker name> <price>       |");
+                System.out.println("| Eg.          update  goog 999.99            |");
+            }
+            System.out.println("|                                              |");
+            System.out.println("|                    quit                      |");
+
+        }
+        System.out.println("-----------------------------------------------");
+
     }
 
     private String getInput()

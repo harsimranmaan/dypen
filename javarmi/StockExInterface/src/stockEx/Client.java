@@ -50,7 +50,7 @@ public class Client implements Serializable
     /**
      * @return the isAdmin
      */
-    public boolean isIsAdmin()
+    public boolean isAdmin()
     {
         return isAdmin;
     }
