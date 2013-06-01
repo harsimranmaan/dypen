@@ -1,5 +1,4 @@
-#Exceptions
-!javarmi/StockExServer/lib/*.jar
+
 
 *.class
 javarmi/StockExServer/nbproject/private/
@@ -19,3 +18,6 @@ javarmi/StockExClient/dist/
 *.bak
 *~
 .DS_Store
+
+#Exceptions
+!javarmi/StockExServer/lib/*.jar

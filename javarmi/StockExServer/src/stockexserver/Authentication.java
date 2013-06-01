@@ -38,8 +38,8 @@ public class Authentication extends UnicastRemoteObject implements IAuthenticati
         {
             try
             {
-                ResultSet set = DataAccess.getResultSet("SELECT * FROM Client where clientName = " + userName);
-                if (set != null || set.next())
+                ResultSet set = DataAccess.getResultSet("SELECT * FROM Client where clientName = '" + userName + "'");
+                if (set != null && set.next())
                 {
                     client = new Client(userName);
                     client.setIsAdmin(set.getBoolean("isAdmin"));

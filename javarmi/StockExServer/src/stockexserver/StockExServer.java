@@ -10,6 +10,7 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import stockEx.IAuthentication;
 import stockEx.IStockQuery;
+import stockexserver.dataAccess.DataAccess;
 
 /**
  *
@@ -38,6 +39,7 @@ public class StockExServer
         registry.rebind(IAuthentication.class.getSimpleName(), new Authentication());
 
         printMessage(IAuthentication.class.getSimpleName());
+        DataAccess.Connect();
         System.out.println("Server started");
         while (true);
 
