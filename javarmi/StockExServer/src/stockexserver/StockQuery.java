@@ -29,7 +29,7 @@ public class StockQuery extends UnicastRemoteObject implements IStockQuery, Seri
     @Override
     public Stock query(Client client, String ticketName) throws RemoteException
     {
-        return new Stock("tic" + ticketName, 10);
+        return StockManager.fetchOrCreate(ticketName);
     }
 
     @Override
@@ -39,7 +39,7 @@ public class StockQuery extends UnicastRemoteObject implements IStockQuery, Seri
     }
 
     @Override
-    public void sell(Client client, String stock, int quantity) throws RemoteException
+    public Client sell(Client client, String stock, int quantity) throws RemoteException
     {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
