@@ -22,24 +22,18 @@ public class StockExServer
     /**
      * @param args the command line arguments
      */
-    public static void main(String[] args)
+    public static void main(String[] args) throws RemoteException
     {
-        try
-        {
-            if (System.getSecurityManager() == null)
-            {
-                System.setSecurityManager(new SecurityManager());
-            }
-            StockQuery queryObj = new StockQuery();
-            IStockQuery stockQueryInterface = (IStockQuery) UnicastRemoteObject.exportObject(queryObj, 60011);
-            // Bind the remote object in the registry
-            Registry registry = LocateRegistry.getRegistry();
-            registry.rebind("StockQuery", stockQueryInterface);
-            System.out.println("Server started");
-        }
-        catch (RemoteException ex)
-        {
-            Logger.getLogger(StockExServer.class.getName()).log(Level.SEVERE, null, ex);
-        }
+
+//        StockQuery queryObj = new StockQuery();
+//        IStockQuery stockQueryInterface = (IStockQuery) UnicastRemoteObject.exportObject(queryObj, 60011);
+        // Bind the remote object in the registry
+        Registry registry = LocateRegistry.createRegistry(1099);
+        registry.rebind(IStockQuery.class.getSimpleName(), new StockQuery());
+        System.out.println("Registered object ");
+
+        System.out.println("Server started");
+        while (true);
+
     }
 }

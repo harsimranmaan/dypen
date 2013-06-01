@@ -4,30 +4,46 @@
  */
 package stockexserver;
 
+import java.io.Serializable;
 import java.rmi.RemoteException;
+import java.rmi.server.UnicastRemoteObject;
 import stockEx.IStockQuery;
+import stockEx.Stock;
 
 /**
  *
  * @author harsimran.maan
  */
-public class StockQuery implements IStockQuery
+public class StockQuery extends UnicastRemoteObject implements IStockQuery, Serializable
 {
 
-    @Override
-    public String query(String ticketName) throws RemoteException
+    private static final long serialVersionUID = 222L;
+
+    public StockQuery() throws RemoteException
     {
-        return "Test Success!";
+        super();
     }
 
     @Override
-    public void buy(String ticketName, int quantity) throws RemoteException
+    public Stock query(String client, String ticketName) throws RemoteException
+    {
+        return new Stock("tic" + ticketName, 10);
+    }
+
+    @Override
+    public void buy(String client, Stock stock, int quantity) throws RemoteException
     {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public void sell(String ticketName, int quantity) throws RemoteException
+    public void sell(String client, Stock stock, int quantity) throws RemoteException
+    {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void update(String client, Stock stock) throws RemoteException
     {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }

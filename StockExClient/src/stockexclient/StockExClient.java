@@ -2,7 +2,6 @@ package stockexclient;
 
 import java.rmi.AccessException;
 import java.rmi.NotBoundException;
-import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
@@ -20,21 +19,23 @@ public class StockExClient
     /**
      * @param args the command line arguments
      */
-    public static void main(String[] args)
+    public static void main(String[] args) throws NotBoundException
     {
-        if (System.getSecurityManager() == null)
-        {
-            System.setSecurityManager(new SecurityManager());
-        }
         try
         {
-            String name = "StockQuery";
-            Registry registry = LocateRegistry.getRegistry(60011);
-            IStockQuery lookup = (IStockQuery) registry.lookup(name);
-            System.out.println(lookup.query("GOOG"));
-
+            Registry registry = LocateRegistry.getRegistry("localhost", 1099);
+            IStockQuery stockQuery = (IStockQuery) registry.lookup(IStockQuery.class.getSimpleName());
+            for (int i = 1; i <= 100; i++)
+            {
+                System.out.println(stockQuery.query("" + i, "GOOG"));
+                Thread.sleep(100);
+            }
         }
-        catch (RemoteException | NotBoundException ex)
+        catch (RemoteException ex)
+        {
+            Logger.getLogger(StockExClient.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        catch (InterruptedException ex)
         {
             Logger.getLogger(StockExClient.class.getName()).log(Level.SEVERE, null, ex);
         }
