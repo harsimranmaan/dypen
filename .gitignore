@@ -1,13 +1,13 @@
 *.class
-/StockExServer/nbproject/private/
-/StockExClient/nbproject/private/
-/StockExInterface/nbproject/private/
-/StockExInterface/build/
-/StockExInterface/dist/
-/StockExServer/build/
-/StockExServer/dist/
-/StockExClient/build/
-/StockExClient/dist/
+javarmi/StockExServer/nbproject/private/
+javarmi/StockExClient/nbproject/private/
+javarmi/StockExInterface/nbproject/private/
+javarmi/StockExInterface/build/
+javarmi/StockExInterface/dist/
+javarmi/StockExServer/build/
+javarmi/StockExServer/dist/
+javarmi/StockExClient/build/
+javarmi/StockExClient/dist/
 
 # Package Files #
 *.jar
