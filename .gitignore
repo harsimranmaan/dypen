@@ -1,3 +1,6 @@
+#Exceptions
+!javarmi/StockExServer/lib/*.jar
+
 *.class
 javarmi/StockExServer/nbproject/private/
 javarmi/StockExClient/nbproject/private/
