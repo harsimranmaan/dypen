@@ -29,27 +29,31 @@ public class InteractionManager
         System.out.println("Please log in before you send the request.");
     }
 
+    /**
+     *
+     * @return client type
+     */
     private boolean isLoggedIn()
     {
         return client != null;
     }
 
+    /**
+     *
+     * @param commandName
+     */
     private void printWarning(String commandName)
     {
         System.out.print("Invalid parameters or Invalid command '" + commandName);
         System.out.println("'. Use help for syntax.");
     }
 
-    public String getSelectedUserName()
-    {
-        return selectedUserName;
-    }
-
-    public void setSelectedUserName(String selectedUserName)
-    {
-        this.selectedUserName = selectedUserName;
-    }
-
+    /**
+     *
+     * @param stockQuery
+     * @param auth
+     * @param isAdmin
+     */
     public InteractionManager(IStockQuery stockQuery, IAuthentication auth, boolean isAdmin)
     {
         this.isAdmin = isAdmin;
@@ -61,6 +65,10 @@ public class InteractionManager
         System.out.println("");
     }
 
+    /**
+     *
+     * @throws RemoteException
+     */
     public void init() throws RemoteException
     {
 
@@ -93,6 +101,20 @@ public class InteractionManager
                     {
                         printWarning(commandString[0]);
                     }
+                    break;
+                case "list":
+                    if (commandString.length == 1 && !client.isAdmin())
+                    {
+                        if (isLoggedIn())
+                        {
+                            System.out.println("Under construction");
+                        }
+                    }
+                    else
+                    {
+                        printloginMessage();
+                    }
+
                     break;
 
                 case "buy":
@@ -185,7 +207,10 @@ public class InteractionManager
                     }
                     break;
                 case "help":
-                    printPrompt();
+                    if (commandString.length == 1)
+                    {
+                        printPrompt();
+                    }
                     break;
                 case "quit":
                     client = null;
@@ -221,7 +246,8 @@ public class InteractionManager
                 System.out.println("|                                              |");
                 System.out.println("|         sell <ticker name> <quantity>        |");
                 System.out.println("| Eg.             sell  goog 10                |");
-
+                System.out.println("|                                              |");
+                System.out.println("|                    list                      |");
             }
             else
             {
@@ -236,6 +262,10 @@ public class InteractionManager
 
     }
 
+    /**
+     *
+     * @return command string
+     */
     private String getInput()
     {
         scanIn = new Scanner(System.in);
@@ -243,6 +273,11 @@ public class InteractionManager
         return input;
     }
 
+    /**
+     *
+     * @param inputString <p/>
+     * @return splitted command string
+     */
     private String[] inputSplit(String inputString)
     {
         String SplitString[] = inputString.split(" ");
@@ -260,6 +295,13 @@ public class InteractionManager
         }
     }
 
+    /**
+     *
+     * @param bal <p/>
+     * @return balance in double format
+     * <p/>
+     * @throws NumberFormatException
+     */
     private double getInputAmount(String bal) throws NumberFormatException
     {
 
@@ -271,6 +313,13 @@ public class InteractionManager
         return Double.valueOf(bal);
     }
 
+    /**
+     *
+     * @param strInt <p/>
+     * @return string in integer format
+     * <p/>
+     * @throws NumberFormatException
+     */
     private int getInteger(String strInt) throws NumberFormatException
     {
 
