@@ -24,9 +24,16 @@ public class StockExClient
     {
         try
         {
+
+
             Registry registry = LocateRegistry.getRegistry("localhost", 1099);
             IStockQuery stockQuery = (IStockQuery) registry.lookup(IStockQuery.class.getSimpleName());
             IAuthentication auth = (IAuthentication) registry.lookup(IAuthentication.class.getSimpleName());
+
+            InteractionManager interact = new InteractionManager(stockQuery, auth);
+            //Start
+            interact.init();
+
             for (int i = 1; i <= 100; i++)
             {
                 System.out.println(auth.init("maan", true));
