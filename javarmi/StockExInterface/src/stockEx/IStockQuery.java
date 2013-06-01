@@ -43,5 +43,5 @@ public interface IStockQuery extends Remote
      * @param stock <p/>
      * @throws RemoteException
      */
-    void update(Client client, String stock) throws RemoteException;
+    void update(Client client, String stock, double price) throws RemoteException;
 }
