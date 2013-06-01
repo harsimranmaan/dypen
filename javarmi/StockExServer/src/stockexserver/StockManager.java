@@ -24,6 +24,28 @@ import stockexserver.dataAccess.DataAccess;
 public class StockManager extends Thread
 {
 
+    static void update(String stock, double price) throws Exception
+    {
+        try
+        {
+            ResultSet set = DataAccess.getResultSet("SELECT * FROM Stock WHERE stockName='" + stock + "'");
+
+            if (set != null && set.next())
+            {
+                DataAccess.updateOrInsertSingle("UPDATE Stock SET price = " + price + " WHERE stockName='" + stock + "'");
+            }
+            else
+            {
+                throw new Exception("Untracked/ Invalid stock.");
+            }
+        }
+        catch (SQLException ex)
+        {
+            Logger.getLogger(StockManager.class.getName()).log(Level.SEVERE, null, ex);
+            throw new RemoteException("Update failed.");
+        }
+    }
+
     private void updateStocks(String stocks)
     {
         try
@@ -54,7 +76,7 @@ public class StockManager extends Thread
         }
     }
 
-    public static Stock fetchOrCreate(String stock)
+    public static Stock fetchOrCreate(String stock) throws Exception
     {
 
         Stock s = null;
@@ -84,7 +106,7 @@ public class StockManager extends Thread
                 else
                 {
                     in.close();
-                    throw new RemoteException("Stock not found");
+                    throw new Exception("Stock not found");
                 }
                 in.close();
             }

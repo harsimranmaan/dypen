@@ -17,7 +17,6 @@ import stockEx.IStockQuery;
 public class InteractionManager
 {
 
-    private String selectedUserName;
     private Scanner scanIn;
     private IStockQuery stockQuery;
     private IAuthentication authentication;
@@ -27,6 +26,11 @@ public class InteractionManager
     private void printloginMessage()
     {
         System.out.println("Please log in before you send the request.");
+    }
+
+    private void printServerMessage(String message)
+    {
+        System.out.println(message);
     }
 
     /**
@@ -89,8 +93,14 @@ public class InteractionManager
                     {
                         if (isLoggedIn())
                         {
-                            System.out.println(stockQuery.query(client, commandString[1]));
-
+                            try
+                            {
+                                System.out.println(stockQuery.query(client, commandString[1]));
+                            }
+                            catch (RemoteException ex)
+                            {
+                                printServerMessage(ex.getMessage());
+                            }
                         }
                         else
                         {
@@ -185,6 +195,10 @@ public class InteractionManager
                             {
                                 printWarning(commandString[0]);
                             }
+                            catch (RemoteException ex)
+                            {
+                                printServerMessage(ex.getMessage());
+                            }
                         }
                         else
                         {
@@ -214,6 +228,7 @@ public class InteractionManager
                     break;
                 case "quit":
                     client = null;
+                    isExit = true;
                     break;
                 default:
                     printWarning(commandString[0]);
