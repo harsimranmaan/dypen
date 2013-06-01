@@ -38,7 +38,7 @@ public class StockQuery extends UnicastRemoteObject implements IStockQuery, Seri
     }
 
     @Override
-    public void sell(Client client, String stock, int quantity) throws RemoteException
+    public Client sell(Client client, String stock, int quantity) throws RemoteException
     {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
