@@ -158,9 +158,16 @@ public class InteractionManager
                             try
                             {
                                 quantity = getInteger(commandString[2]);
-                                client = stockQuery.buy(client, commandString[1], quantity);
-                                System.out.println(Integer.toString(quantity) + " " + commandString[1] + " bought.");
-                                System.out.println(" Your current balance is $" + client.getBalance() + " .");
+                                if (quantity > 0)
+                                {
+                                    client = stockQuery.buy(client, commandString[1], quantity);
+                                    System.out.println(Integer.toString(quantity) + " " + commandString[1] + " bought.");
+                                    System.out.println(" Your current balance is $" + client.getBalance() + " .");
+                                }
+                                else
+                                {
+                                    System.out.println("Enter quantity greater than zero.");
+                                }
                             }
                             catch (NumberFormatException ne)
                             {
@@ -193,8 +200,15 @@ public class InteractionManager
                             try
                             {
                                 quantity = getInteger(commandString[2]);
-                                stockQuery.sell(client, commandString[1], quantity);
-                                System.out.println(Integer.toString(quantity) + " " + commandString[1] + " sold.");
+                                if (quantity > 0)
+                                {
+                                    stockQuery.sell(client, commandString[1], quantity);
+                                    System.out.println(Integer.toString(quantity) + " " + commandString[1] + " sold.");
+                                }
+                                else
+                                {
+                                    System.out.println("Enter quantity great than zero.");
+                                }
                             }
                             catch (NumberFormatException ne)
                             {
@@ -225,8 +239,15 @@ public class InteractionManager
                             try
                             {
                                 double price = getInputAmount(commandString[2]);
-                                stockQuery.update(client, commandString[1], price);
-                                System.out.println("Price of " + commandString[1] + " updated to " + price + " .");
+                                if (price > 0)
+                                {
+                                    stockQuery.update(client, commandString[1], price);
+                                    System.out.println("Price of " + commandString[1] + " updated to " + price + " .");
+                                }
+                                else
+                                {
+                                    System.out.println("Enter price greater than zero");
+                                }
                             }
                             catch (NumberFormatException ne)
                             {
