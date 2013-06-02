@@ -78,7 +78,7 @@ public class InteractionManager
     public void init() throws RemoteException
     {
 
-        String message, command;
+        String command;
         int quantity = 0;
         String[] commandString;
         boolean isExit = false;
