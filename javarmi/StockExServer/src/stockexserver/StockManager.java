@@ -198,7 +198,7 @@ public class StockManager extends Thread
         {
             int stockQuantity = set.getInt("remaining");
             double price = set.getDouble("price");
-            int balance = set.getInt("balance");
+            double balance = set.getDouble("balance");
             if (stockQuantity >= quantity)
             {
                 if (price * quantity <= balance)
@@ -219,7 +219,7 @@ public class StockManager extends Thread
                     set = DataAccess.getResultSet("SELECT * FROM Client where clientName = '" + client.getUsername() + "'");
                     if (set != null && set.next())
                     {
-                        client.setBalance(set.getInt("balance"));
+                        client.setBalance(set.getDouble("balance"));
                     }
                 }
                 else

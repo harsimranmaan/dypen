@@ -273,6 +273,7 @@ public class InteractionManager
                     if (commandString.length == 2)
                     {
                         client = authentication.init(commandString[1], isAdmin);
+                        printMessage("Your Balance is :" + client.getBalance());
                     }
                     else
                     {

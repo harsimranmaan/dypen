@@ -15,7 +15,7 @@ public class Client implements Serializable
 
     private static final long serialVersionUID = 1111L;
     private String username;
-    private int balance;
+    private double balance;
     private boolean isAdmin;
 
     public Client(String username)
@@ -34,7 +34,7 @@ public class Client implements Serializable
     /**
      * @return the balance
      */
-    public int getBalance()
+    public double getBalance()
     {
         return balance;
     }
@@ -42,7 +42,7 @@ public class Client implements Serializable
     /**
      * @param balance the balance to set
      */
-    public void setBalance(int balance)
+    public void setBalance(double balance)
     {
         this.balance = balance;
     }

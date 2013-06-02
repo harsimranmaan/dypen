@@ -43,7 +43,7 @@ public class Authentication extends UnicastRemoteObject implements IAuthenticati
                 {
                     client = new Client(userName);
                     client.setIsAdmin(set.getBoolean("isAdmin"));
-                    client.setBalance(set.getInt("balance"));
+                    client.setBalance(set.getDouble("balance"));
                 }
                 else
                 {
