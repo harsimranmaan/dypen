@@ -40,6 +40,7 @@ public class Stock implements Serializable
     }
 
     /**
+     *
      * @return the name
      */
     public String getName()

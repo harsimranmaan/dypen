@@ -29,7 +29,7 @@ public class StockExClient
             IStockQuery stockQuery = (IStockQuery) registry.lookup(IStockQuery.class.getSimpleName());
             IAuthentication auth = (IAuthentication) registry.lookup(IAuthentication.class.getSimpleName());
             String isAdmin = context.getPropertyValue("admin");
-            InteractionManager interact = new InteractionManager(stockQuery, auth, isAdmin.equals("true"));
+            InteractionManager interact = new InteractionManager(stockQuery, auth, isAdmin.equals("false"));
             //Start
             interact.init();
         }
