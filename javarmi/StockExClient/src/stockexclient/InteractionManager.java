@@ -7,8 +7,6 @@ package stockexclient;
 import java.rmi.RemoteException;
 import java.util.List;
 import java.util.Scanner;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import stockEx.Client;
 import stockEx.IAuthentication;
 import stockEx.IStockQuery;
