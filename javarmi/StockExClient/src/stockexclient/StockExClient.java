@@ -32,21 +32,11 @@ public class StockExClient
             InteractionManager interact = new InteractionManager(stockQuery, auth, isAdmin.equals("true"));
             //Start
             interact.init();
-
-            for (int i = 1; i <= 100; i++)
-            {
-                System.out.println(auth.init("maan", true));
-                //    System.out.println(stockQuery.query("" + i, "GOOG"));
-                Thread.sleep(100);
-            }
         }
         catch (RemoteException ex)
         {
             Logger.getLogger(StockExClient.class.getName()).log(Level.SEVERE, null, ex);
         }
-        catch (InterruptedException ex)
-        {
-            Logger.getLogger(StockExClient.class.getName()).log(Level.SEVERE, null, ex);
-        }
+
     }
 }

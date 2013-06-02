@@ -129,7 +129,7 @@ public class InteractionManager
                             {
                                 for (Stock stock : list)
                                 {
-                                    System.out.println(stock.print());
+                                    System.out.println(stock);
                                 }
                             }
                             else
