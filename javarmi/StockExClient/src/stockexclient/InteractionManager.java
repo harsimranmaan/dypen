@@ -330,28 +330,6 @@ public class InteractionManager
 
     /**
      *
-     * @param inputString <p/>
-     * @return splitted command string
-     */
-    private String[] inputSplit(String inputString)
-    {
-        String SplitString[] = inputString.split(" ");
-        if (SplitString.length > 1 || SplitString.length < 4)
-        {
-            return SplitString;
-        }
-        else
-        {
-            SplitString = new String[]
-            {
-                " "
-            };
-            return SplitString;
-        }
-    }
-
-    /**
-     *
      * @param bal <p/>
      * @return balance in double format
      * <p/>

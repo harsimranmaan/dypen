@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import stockEx.Client;
 import stockEx.ConfigManager;
 import stockEx.Stock;
 import stockexserver.dataAccess.DataAccess;
@@ -26,7 +27,7 @@ import stockexserver.dataAccess.DataAccess;
 public class StockManager extends Thread
 {
 
-    static void update(String stock, double price) throws Exception
+    public static void update(String stock, double price) throws Exception
     {
         try
         {
@@ -189,4 +190,56 @@ public class StockManager extends Thread
         }
         return list;
     }
+
+    public static synchronized Client buy(Client client, String stockName, int quantity) throws Exception
+    {
+        ResultSet set = DataAccess.getResultSet("SELECT * from Client, Stock WHERE stockName='" + stockName + "' AND clientName='" + client.getUsername() + "'");
+        if (set != null && set.next())
+        {
+            int stockQuantity = set.getInt("remaining");
+            double price = set.getDouble("price");
+            int balance = set.getInt("balance");
+            if (stockQuantity >= quantity)
+            {
+                if (price * quantity <= balance)
+                {
+                    try
+                    {
+                        DataAccess.updateOrInsertMultiple("INSERT INTO ClientBuy(clientName,stockName,quantity,price) VALUES('" + client.getUsername() + "','" + stockName + "'," + quantity + "," + price + ")");
+                        DataAccess.updateOrInsertMultiple("UPDATE Client SET balance=balance-" + price * quantity + " WHERE clientName='" + client.getUsername() + "'");
+                        DataAccess.updateOrInsertMultiple("UPDATE Stock SET remaining=remaining-" + quantity + " WHERE stockName='" + stockName + "'");
+                        DataAccess.commit();
+                    }
+                    catch (SQLException ex)
+                    {
+                        DataAccess.rollback();
+                        throw new Exception("Not able to process the request at this time. Re-try after sometime");
+
+                    }
+                    set = DataAccess.getResultSet("SELECT * FROM Client where clientName = '" + client.getUsername() + "'");
+                    if (set != null && set.next())
+                    {
+                        client.setBalance(set.getInt("balance"));
+                    }
+                }
+                else
+                {
+                    throw new Exception("Insufficent balance to buy stocks");
+                }
+
+            }
+            else
+            {
+                throw new Exception("Only " + stockQuantity + " stocks can be traded.");
+            }
+        }
+        else
+        {
+            throw new Exception("Invalid stock.");
+        }
+        return client;
+    }
+//    public static synchronized Client sell(String clientName, String stockName, int quantity) throws Exception
+//    {
+//    }
 }
