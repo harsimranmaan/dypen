@@ -204,6 +204,7 @@ public class InteractionManager
                                 {
                                     stockQuery.sell(client, commandString[1], quantity);
                                     System.out.println(Integer.toString(quantity) + " " + commandString[1] + " sold.");
+                                    System.out.println(" Your current balance is $" + client.getBalance() + " .");
                                 }
                                 else
                                 {

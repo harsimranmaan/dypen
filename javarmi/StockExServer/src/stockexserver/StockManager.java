@@ -171,7 +171,7 @@ public class StockManager extends Thread
         List<Stock> list = new ArrayList<Stock>();
         try
         {
-            set = DataAccess.getResultSet("SELECT * FROM ClientBuy WHERE clientName='" + clientName + "'");
+            set = DataAccess.getResultSet("SELECT * FROM ClientBuy WHERE clientName='" + clientName + "' AND quantity>0");
             if (set != null && set.next())
             {
                 do
@@ -239,7 +239,77 @@ public class StockManager extends Thread
         }
         return client;
     }
-//    public static synchronized Client sell(String clientName, String stockName, int quantity) throws Exception
-//    {
-//    }
+
+    public static synchronized Client sell(Client client, String stockName, int quantity) throws Exception
+    {
+        ResultSet set = DataAccess.getResultSet("SELECT * FROM Stock WHERE stockName='" + stockName + "'");
+
+        if (set != null && set.next())
+        {
+            double price = set.getDouble("price");
+            set = DataAccess.getResultSet("SELECT * from ClientBuy WHERE stockName='" + stockName + "' AND clientName='" + client.getUsername() + "' AND quantity>0");
+            List<ClientBuy> list = new ArrayList<>();
+            int totalBought = 0;
+            if (set != null && set.next())
+            {
+                do
+                {
+                    int quant = set.getInt("quantity");
+                    totalBought += quant;
+                    ClientBuy cb = new ClientBuy();
+                    cb.setId(set.getInt("id"));
+                    cb.setQuantity(quant);
+                    list.add(cb);
+                }
+                while (set.next());
+                if (totalBought >= quantity)
+                {
+                    try
+                    {
+                        DataAccess.updateOrInsertMultiple("INSERT INTO ClientSell(clientName,stockName,quantity,price) VALUES('" + client.getUsername() + "','" + stockName + "'," + quantity + "," + price + ")");
+                        DataAccess.updateOrInsertMultiple("UPDATE Client SET balance=balance+" + price * quantity + " WHERE clientName='" + client.getUsername() + "'");
+                        DataAccess.updateOrInsertMultiple("UPDATE Stock SET remaining=remaining+" + quantity + " WHERE stockName='" + stockName + "'");
+                        for (ClientBuy buys : list)
+                        {
+                            if (quantity > 0)
+                            {
+                                int qu = buys.getQuantity() <= quantity ? buys.getQuantity() : quantity;
+                                quantity -= qu;
+                                DataAccess.updateOrInsertMultiple("UPDATE ClientBuy SET quantity=quantity-" + qu + " WHERE id='" + buys.getId() + "'");
+                            }
+                            else
+                            {
+                                break;
+                            }
+                        }
+                        DataAccess.commit();
+                    }
+                    catch (SQLException ex)
+                    {
+                        DataAccess.rollback();
+                        throw new Exception("Not able to process the request at this time. Re-try after sometime");
+
+                    }
+                    set = DataAccess.getResultSet("SELECT * FROM Client where clientName = '" + client.getUsername() + "'");
+                    if (set != null && set.next())
+                    {
+                        client.setBalance(set.getDouble("balance"));
+                    }
+                }
+                else
+                {
+                    throw new Exception("Cannot sell more stocks than stocks in the portfolio.");
+                }
+            }
+            else
+            {
+                throw new Exception("Stock not bought.");
+            }
+        }
+        else
+        {
+            throw new Exception("Invalid Stock.");
+        }
+        return client;
+    }
 }
