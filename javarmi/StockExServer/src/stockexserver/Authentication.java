@@ -25,6 +25,10 @@ public class Authentication extends UnicastRemoteObject implements IAuthenticati
 
     private static final long serialVersionUID = 2222L;
 
+    /**
+     *
+     * @throws RemoteException
+     */
     public Authentication() throws RemoteException
     {
         super();

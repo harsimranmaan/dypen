@@ -27,6 +27,13 @@ import stockexserver.dataAccess.DataAccess;
 public class StockManager extends Thread
 {
 
+    /**
+     * Update query
+     * <p/>
+     * @param stock
+     * @param price <p/>
+     * @throws Exception
+     */
     public static void update(String stock, double price) throws Exception
     {
         try
@@ -49,6 +56,11 @@ public class StockManager extends Thread
         }
     }
 
+    /**
+     * Updates Stock
+     * <p/>
+     * @param stocks
+     */
     private void updateStocks(String stocks)
     {
         try
@@ -79,6 +91,13 @@ public class StockManager extends Thread
         }
     }
 
+    /**
+     *
+     * @param stock <p/>
+     * @return Stock
+     * <p/>
+     * @throws Exception
+     */
     public static Stock fetchOrCreate(String stock) throws Exception
     {
 
@@ -129,6 +148,9 @@ public class StockManager extends Thread
         return s;
     }
 
+    /**
+     *
+     */
     public void run()
     {
         while (true)
@@ -165,6 +187,12 @@ public class StockManager extends Thread
         }
     }
 
+    /**
+     * method to get list of stocks
+     * <p/>
+     * @param clientName <p/>
+     * @return list of stocks
+     */
     public static List<Stock> listOfStocks(String clientName)
     {
         ResultSet set;
@@ -191,6 +219,16 @@ public class StockManager extends Thread
         return list;
     }
 
+    /**
+     * buy stock
+     * <p/>
+     * @param client
+     * @param stockName
+     * @param quantity <p/>
+     * @return client information after buying
+     * <p/>
+     * @throws Exception
+     */
     public static synchronized Client buy(Client client, String stockName, int quantity) throws Exception
     {
         ResultSet set = DataAccess.getResultSet("SELECT * from Client, Stock WHERE stockName='" + stockName + "' AND clientName='" + client.getUsername() + "'");
@@ -240,6 +278,16 @@ public class StockManager extends Thread
         return client;
     }
 
+    /**
+     * sell stock
+     * <p/>
+     * @param client
+     * @param stockName
+     * @param quantity <p/>
+     * @return updated client after selling
+     * <p/>
+     * @throws Exception
+     */
     public static synchronized Client sell(Client client, String stockName, int quantity) throws Exception
     {
         ResultSet set = DataAccess.getResultSet("SELECT * FROM Stock WHERE stockName='" + stockName + "'");
