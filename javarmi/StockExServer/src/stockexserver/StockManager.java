@@ -92,6 +92,7 @@ public class StockManager extends Thread
             {
                 s = new Stock(stock);
                 s.setPrice(set.getDouble("price"));
+                s.setQuantity(set.getInt("remaining"));
             }
             else
             {
@@ -101,9 +102,11 @@ public class StockManager extends Thread
                 String inputLine;
                 if ((inputLine = in.readLine()) != null && !inputLine.equals("0.00"))
                 {
-                    DataAccess.updateOrInsertSingle("INSERT INTO Stock VALUES('" + stock + "'," + inputLine + "," + ConfigManager.getInstance().getPropertyValue("intialStock") + ")");
+                    String quantity = ConfigManager.getInstance().getPropertyValue("intialStock");
+                    DataAccess.updateOrInsertSingle("INSERT INTO Stock VALUES('" + stock + "'," + inputLine + "," + quantity + ")");
                     s = new Stock(stock);
                     s.setPrice(Double.valueOf(inputLine));
+                    s.setQuantity(Integer.valueOf(quantity));
                 }
                 else
                 {

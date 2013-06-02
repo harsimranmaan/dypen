@@ -74,12 +74,7 @@ public class Stock implements Serializable
     @Override
     public String toString()
     {
-        return "Stock [name:" + name + ", price:" + price + "]";
-    }
-
-    public String print()
-    {
-        return "Stock [name:" + name + ", price:" + price + ", quantity:" + quantity + " ]";
+        return "Stock [name:" + name + ", price:" + price + ", number of stocks:" + quantity + " ]";
     }
 
     /**
