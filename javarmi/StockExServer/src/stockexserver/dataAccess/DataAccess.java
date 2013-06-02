@@ -41,7 +41,7 @@ public class DataAccess
             ConfigManager context = ConfigManager.getInstance();
             conn = DriverManager.getConnection(context.getPropertyValue("dbConnection"), context.getPropertyValue("dbUserId"), Encryptor.decryptAES(context.getPropertyValue("dbUserToken")));
             conn.setAutoCommit(false);
-            System.out.println("success conn =" + (conn).toString());
+            //      System.out.println("success conn =" + (conn).toString());
         }
         catch (Exception ex)
         {
@@ -110,7 +110,7 @@ public class DataAccess
      */
     public static void updateOrInsertSingle(String sql) throws SQLException
     {
-        System.out.println(sql);
+        //System.out.println(sql);
         Statement stmt = getConnection().createStatement();
         try
         {
@@ -141,7 +141,7 @@ public class DataAccess
      */
     public static void updateOrInsertMultiple(String sql) throws SQLException
     {
-        System.out.println(sql);
+        // System.out.println(sql);
         Statement stmt = getConnection().createStatement();
         try
         {
@@ -170,7 +170,7 @@ public class DataAccess
      */
     public static ResultSet getResultSet(String sql) throws SQLException
     {
-        System.out.println(sql);
+        // System.out.println(sql);
         Statement stmt;
         ResultSet rs = null;
         try
